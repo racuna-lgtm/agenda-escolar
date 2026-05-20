@@ -78,7 +78,7 @@
   .col.has-entrega{border:1.5px solid var(--purple);box-shadow:0 3px 15px rgba(168,85,247,.1);}
 
   .col-head{padding:10px 12px 8px;display:flex;justify-content:space-between;align-items:center;}
-  .col-head .dname{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+  .col-head .dname{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
   .col-head .dnum{font-size:22px;font-weight:900;color:#E0C0D0;}
   .col-head .dnum.today{color:#fff;background:linear-gradient(135deg,var(--pink),var(--purple));width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 10px rgba(255,107,138,.35);}
   .col-body{padding:6px 10px 12px;flex:1;display:flex;flex-direction:column;gap:7px;}
@@ -218,12 +218,13 @@ function parse(text){
       const dates=extractDatesM(clean,weekMonth);
       const inside=dates.filter(d=>startDay&&endDay&&d.month===weekMonth&&d.day>=startDay&&d.day<=endDay);
       const outside=dates.filter(d=>{if(!startDay||!endDay) return false;return d.month>weekMonth||(d.month===weekMonth&&d.day>endDay)||(d.month===weekMonth&&d.day<startDay)||(d.month<weekMonth);});
-      if(outside.length>0&&inside.length===0){addUF(futureItems,{type:'eval',subject:subj,text:clean,dates:outside});}
+      const itemType=isEntregaText(clean)?'entrega':'eval';
+      if(outside.length>0&&inside.length===0){addUF(futureItems,{type:itemType,subject:subj,text:clean,dates:outside});}
       else{
         const evalDay=resolveDay(clean,startDay);
-        if(evalDay&&week[evalDay]) addU(week[evalDay].items,{type:'eval',subject:subj,text:clean});
-        else if(inside.length>0){const idx=inside[0].day-startDay;if(idx>=0&&idx<5) addU(week[DAYS[idx]].items,{type:'eval',subject:subj,text:clean});}
-        if(outside.length>0) addUF(futureItems,{type:'eval',subject:subj,text:clean,dates:outside});
+        if(evalDay&&week[evalDay]) addU(week[evalDay].items,{type:itemType,subject:subj,text:clean});
+        else if(inside.length>0){const idx=inside[0].day-startDay;if(idx>=0&&idx<5) addU(week[DAYS[idx]].items,{type:itemType,subject:subj,text:clean});}
+        if(outside.length>0) addUF(futureItems,{type:itemType,subject:subj,text:clean,dates:outside});
       }
       for(const m of extractMaterials(evalSection)){
         const evalDay=resolveDay(evalSection,startDay);
@@ -247,8 +248,9 @@ function extractEntregas(t){const r=[];for(const p of [/(?:entrega\s+y\s+present
 function cleanEval(t){return t.replace(/\s*Recursos?\s*:\s*(?:texto[\s,]*)?(?:cuaderno[\s,]*)?(?:estuche[\s,]*)?\.?\s*/gi,' ').replace(/\s+/g,' ').trim();}
 function isSkip(t){for(const r of EVAL_SKIP){if(r.test(t)) return true;}if(t.length<4) return true;const n=['matemática','lenguaje','historia','ciencias','inglés','música','artes','tecnología','educación física','orientación','religión'];return n.some(s=>t.toLowerCase().trim()===s);}
 function isVague(t){for(const r of EVAL_VAGUE) if(r.test(t)) return true;return false;}
-function extractDatesM(t,dm){const d=[];for(const m of t.matchAll(/(\d{1,2})\s*(?:de\s*)?(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/gi)){d.push({day:parseInt(m[1]),month:MONTHS_MAP[m[2].toLowerCase()]||dm});}return d;}
+function extractDatesM(t,dm){const d=[];for(const m of t.matchAll(/(\d{1,2})\s*(?:de\s*)?(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/gi)){d.push({day:parseInt(m[1]),month:MONTHS_MAP[m[2].toLowerCase()]||dm});}for(const m of t.matchAll(/(\d{1,2})\/(\d{1,2})/g)){d.push({day:parseInt(m[1]),month:parseInt(m[2])});}return d;}
 function resolveDay(t,s){const l=t.toLowerCase();for(let i=0;i<DAYS_ALT.length;i++){for(const a of DAYS_ALT[i]){if(l.includes(a)) return DAYS[i];}}if(s){const d=extractDatesM(t,0);for(const x of d){const idx=x.day-s;if(idx>=0&&idx<5) return DAYS[idx];}}return null;}
+function isEntregaText(t){return /entrega\b/i.test(t)&&!/prueba|evaluaci[oó]n|control|test|examen|certamen|sumativa/i.test(t);}
 function norm(t){return(t||'').replace(/[^a-záéíóúñ0-9]/gi,'').toLowerCase().substring(0,50);}
 function addU(a,i){if(!a.some(x=>x.type===i.type&&norm(x.text)===norm(i.text))) a.push(i);}
 function addUF(a,i){if(!a.some(x=>x.type===i.type&&x.subject===i.subject&&norm(x.text)===norm(i.text))) a.push(i);}
@@ -256,6 +258,10 @@ function dedup(items){for(let i=0;i<items.length;i++){for(let j=i+1;j<items.leng
 function textSim(a,b){const na=norm(a),nb=norm(b);if(na.length<8||nb.length<8) return false;const s=na.length<nb.length?na:nb;const l=na.length<nb.length?nb:na;return l.includes(s.substring(0,Math.min(35,s.length)));}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
+function getDayName(day,month,data){
+  if(!day||!month) return '';
+  try{const dt=new Date(2025,month-1,day);const names=['Dom','Lunes','Martes','Miérc.','Jueves','Viernes','Sáb'];return names[dt.getDay()]||'';}catch(e){return '';}
+}
 function render(data){
   let h='';
   h+=`<div class="wk-head"><span class="wk-icon">📅</span><span class="curso">${esc(data.curso)}</span><span class="semana">${esc(data.weekLabel)}</span></div>`;
@@ -271,7 +277,7 @@ function render(data){
     const hasEntrega=!hasEval&&dd.items.some(x=>x.type==='entrega');
 
     h+=`<div class="col ${dd.holiday&&dd.items.length===0?'holiday':''} ${hasEval?'has-eval':''} ${hasEntrega?'has-entrega':''}">`;
-    h+=`<div class="col-head"><span class="dname">${dn.substring(0,3)}</span><span class="dnum ${isToday?'today':''}">${dayNum}</span></div><div class="col-body">`;
+    h+=`<div class="col-head"><span class="dname">${dn}</span><span class="dnum ${isToday?'today':''}">${dayNum}</span></div><div class="col-body">`;
 
     if(dd.holiday&&dd.items.length===0) h+=`<div class="holiday-label">🎉 ${dd.holidayName}</div>`;
     else if(dd.holiday) h+=`<div style="color:var(--green);font-size:11px;font-weight:800;text-align:center;padding:2px 0 4px;">🎉 ${dd.holidayName}</div>`;
@@ -298,7 +304,8 @@ function render(data){
       h+=`<div class="cal" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr));">`;
       const byDay={};for(const item of byMonth[mk]){const dk=item.dates?.[0]?.day||'?';if(!byDay[dk]) byDay[dk]=[];byDay[dk].push(item);}
       for(const dk of Object.keys(byDay).sort((a,b)=>parseInt(a)-parseInt(b))){
-        h+=`<div class="col"><div class="col-head"><span class="dname"></span><span class="dnum">${dk}</span></div><div class="col-body">`;
+        const fDayName=getDayName(parseInt(dk),parseInt(mk),data);
+        h+=`<div class="col"><div class="col-head"><span class="dname">${fDayName}</span><span class="dnum">${dk}</span></div><div class="col-body">`;
         for(const item of byDay[dk]){const c={eval:['📝','Prueba'],entrega:['📌','Entrega'],mat:['🎒','Llevar']};const [icon,label]=c[item.type]||['',''];
           h+=`<div class="it ${item.type}"><div class="lbl">${icon} ${label} · ${item.subject}</div><div class="txt">${esc(item.text)}</div></div>`;}
         h+=`</div></div>`;}
