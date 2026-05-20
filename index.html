@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda 4to Básico</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:linear-gradient(145deg,#FFF5F9 0%,#FFF8F0 50%,#FBF0FF 100%);
+    --surface:rgba(255,255,255,.82);
+    --surface-solid:#FFFFFF;
+    --text:#4A2040;
+    --muted:#B48DA8;
+    --pink:#FF6B8A;--pink-light:#FFF0F3;--pink-dark:#C9405A;
+    --purple:#A855F7;--purple-light:#F5EEFF;--purple-dark:#7E33CC;
+    --gold:#FFBA49;--gold-light:#FFF7E8;--gold-dark:#9A6800;
+    --green:#34D399;--green-light:#ECFDF5;
+    --radius:16px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);background-attachment:fixed;color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:920px;margin:0 auto;padding:16px 14px 60px;}
+
+  /* HEADER */
+  .header{text-align:center;padding:30px 0 22px;position:relative;}
+  .header-emoji{font-size:36px;margin-bottom:6px;}
+  .header h1{font-size:24px;font-weight:900;letter-spacing:-.3px;color:var(--text);}
+  .header h1 span{background:linear-gradient(135deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .header p{font-size:12px;color:var(--muted);margin-top:4px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+
+  /* UPLOAD */
+  .upload{border:2.5px dashed #E8C0D0;border-radius:20px;padding:36px 20px;text-align:center;cursor:pointer;background:var(--surface);transition:all .25s;margin-bottom:16px;backdrop-filter:blur(10px);}
+  .upload:hover,.upload.over{border-color:var(--pink);background:var(--pink-light);transform:scale(1.01);}
+  .upload-icon{font-size:40px;margin-bottom:8px;}
+  .upload p{font-size:14px;color:var(--muted);margin-bottom:12px;font-weight:600;}
+  .upload .btn{display:inline-block;background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;padding:11px 30px;border-radius:12px;font-weight:800;font-size:14px;box-shadow:0 4px 15px rgba(255,107,138,.3);transition:transform .15s;}
+  .upload .btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,107,138,.4);}
+  #finput{display:none;}
+
+  /* RESET BAR */
+  .rbar{display:none;background:var(--surface);backdrop-filter:blur(10px);border-radius:12px;padding:10px 16px;margin-bottom:14px;justify-content:space-between;align-items:center;border:1px solid rgba(228,180,200,.3);}
+  .rbar.on{display:flex;}
+  .rbar .fn{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);}
+  .rbar button{background:none;border:none;cursor:pointer;font-size:13px;color:var(--pink);font-weight:800;}
+
+  /* LOADING */
+  .loading{display:none;text-align:center;padding:50px;}
+  .loading.on{display:block;}
+  .spin{width:36px;height:36px;border:3.5px solid #F0D0DD;border-top-color:var(--pink);border-radius:50%;animation:sp .7s linear infinite;margin:0 auto 12px;}
+  @keyframes sp{to{transform:rotate(360deg);}}
+  .loading p{font-size:14px;color:var(--muted);font-weight:600;}
+
+  #out{display:none;}
+  #out.on{display:block;}
+
+  /* WEEK HEADER */
+  .wk-head{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+  .wk-icon{font-size:28px;}
+  .wk-head .curso{font-size:18px;font-weight:900;color:var(--text);}
+  .wk-head .semana{font-size:13px;font-weight:700;color:var(--muted);}
+
+  /* TABS */
+  .tabs{display:flex;gap:4px;margin-bottom:18px;background:var(--surface);border-radius:14px;padding:4px;width:fit-content;border:1px solid rgba(228,180,200,.2);backdrop-filter:blur(10px);}
+  .tab{padding:8px 20px;border-radius:11px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .2s;}
+  .tab.active{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;box-shadow:0 3px 10px rgba(255,107,138,.3);}
+  .tab:hover:not(.active){background:var(--pink-light);}
+
+  /* CALENDAR */
+  .cal{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+  @media(max-width:640px){.cal{grid-template-columns:1fr;}}
+
+  .col{background:var(--surface);backdrop-filter:blur(10px);border-radius:var(--radius);overflow:hidden;min-height:90px;display:flex;flex-direction:column;transition:transform .15s;border:1px solid rgba(228,180,200,.18);}
+  .col:hover{transform:translateY(-2px);}
+  .col.holiday{opacity:.55;}
+  .col.has-eval{border:1.5px solid var(--pink);box-shadow:0 3px 15px rgba(255,107,138,.12);}
+  .col.has-entrega{border:1.5px solid var(--purple);box-shadow:0 3px 15px rgba(168,85,247,.1);}
+
+  .col-head{padding:10px 12px 8px;display:flex;justify-content:space-between;align-items:center;}
+  .col-head .dname{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+  .col-head .dnum{font-size:22px;font-weight:900;color:#E0C0D0;}
+  .col-head .dnum.today{color:#fff;background:linear-gradient(135deg,var(--pink),var(--purple));width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 10px rgba(255,107,138,.35);}
+  .col-body{padding:6px 10px 12px;flex:1;display:flex;flex-direction:column;gap:7px;}
+
+  /* ITEMS */
+  .it{border-radius:10px;padding:9px 11px;font-size:12px;line-height:1.5;transition:transform .1s;}
+  .it:hover{transform:scale(1.02);}
+
+  .it.eval{background:var(--pink);color:#fff;}
+  .it.eval .lbl{color:rgba(255,255,255,.8);}
+  .it.eval .txt{color:#fff;font-weight:700;}
+
+  .it.entrega{background:var(--purple);color:#fff;}
+  .it.entrega .lbl{color:rgba(255,255,255,.8);}
+  .it.entrega .txt{color:#fff;font-weight:700;}
+
+  .it.mat{background:var(--gold);color:var(--gold-dark);}
+  .it.mat .lbl{color:rgba(154,104,0,.7);}
+  .it.mat .txt{color:var(--gold-dark);font-weight:700;}
+
+  .lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1px;}
+  .it .txt{font-weight:700;}
+
+  .holiday-label{color:var(--green);font-weight:800;font-size:14px;text-align:center;padding:20px 8px;flex:1;display:flex;align-items:center;justify-content:center;gap:4px;}
+  .empty-col{color:#E8D0DD;font-size:20px;text-align:center;padding:16px 8px;flex:1;display:flex;align-items:center;justify-content:center;}
+
+  /* LEGEND */
+  .legend{display:flex;gap:16px;margin-top:18px;justify-content:center;flex-wrap:wrap;}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--muted);}
+  .legend-dot{width:12px;height:12px;border-radius:4px;}
+  .legend-dot.ev{background:var(--pink);}
+  .legend-dot.en{background:var(--purple);}
+  .legend-dot.ma{background:var(--gold);}
+
+  /* FUTURE */
+  .future-section{display:none;margin-top:4px;}
+  .future-section.on{display:block;}
+  .future-month{font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;color:var(--pink);margin:16px 0 10px 4px;}
+  .future-month:first-child{margin-top:0;}
+
+  @media print{
+    .upload,.rbar,.header,.tabs,.legend{display:none!important;}
+    body{background:#fff!important;}
+    .col{backdrop-filter:none;background:#fff;border:1px solid #ddd;}
+    .it.eval,.it.entrega{color:#333!important;}
+    .it.eval .lbl,.it.entrega .lbl,.it.eval .txt,.it.entrega .txt{color:#333!important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="header-emoji">🎒</div>
+    <h1>Agenda <span>4to Básico</span></h1>
+    <p>Pruebas · Entregas · Materiales</p>
+  </div>
+  <div class="upload" id="upload">
+    <div class="upload-icon">📄</div>
+    <p>Sube el PDF de la agenda semanal</p>
+    <span class="btn">Seleccionar PDF</span>
+  </div>
+  <input type="file" id="finput" accept=".pdf">
+  <div class="rbar" id="rbar"><span class="fn" id="fn"></span><button id="breset">Cambiar PDF</button></div>
+  <div class="loading" id="ld"><div class="spin"></div><p>Leyendo la agenda...</p></div>
+  <div id="out"></div>
+</div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const $=id=>document.getElementById(id);
+const upload=$('upload'),finput=$('finput'),ld=$('ld'),out=$('out'),rbar=$('rbar'),fn=$('fn');
+upload.onclick=()=>finput.click();
+upload.ondragover=e=>{e.preventDefault();upload.classList.add('over');};
+upload.ondragleave=()=>upload.classList.remove('over');
+upload.ondrop=e=>{e.preventDefault();upload.classList.remove('over');if(e.dataTransfer.files[0])go(e.dataTransfer.files[0]);};
+finput.onchange=e=>{if(e.target.files[0])go(e.target.files[0]);};
+$('breset').onclick=()=>{finput.value='';rbar.classList.remove('on');out.classList.remove('on');out.innerHTML='';upload.style.display='';};
+
+async function go(file){
+  upload.style.display='none';fn.textContent=file.name;rbar.classList.add('on');
+  ld.classList.add('on');out.classList.remove('on');out.innerHTML='';
+  try{
+    const buf=await file.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+    let text='';
+    for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const c=await pg.getTextContent();text+='\n~~PG~~\n'+c.items.map(x=>x.str).join(' ');}
+    render(parse(text));
+  }catch(e){console.error(e);out.innerHTML='<p style="color:var(--pink);padding:20px;text-align:center;font-weight:700;">Error al leer el PDF</p>';out.classList.add('on');}
+  finally{ld.classList.remove('on');}
+}
+
+const SCHEDULE={'Inglés':[0,1,2,3],'Lenguaje':[1,2,3,4],'T.Lenguaje':[1,2,3,4],'Matemática':[1,2,3],'T.Matemática':[0],'Ed.Física':[0,4],'Música':[0,1],'Orientación':[2],'Tecnología':[3],'Ciencias':[2,4],'Historia':[0,1],'Artes':[3,4],'Religión':[]};
+const DAYS=['Lunes','Martes','Miércoles','Jueves','Viernes'];
+const DAYS_ALT=[['lunes'],['martes'],['miércoles','miercoles'],['jueves'],['viernes']];
+const MONTHS_MAP={enero:1,febrero:2,marzo:3,abril:4,mayo:5,junio:6,julio:7,agosto:8,septiembre:9,octubre:10,noviembre:11,diciembre:12};
+const MONTHS_NAMES=['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const EVAL_SKIP=[/^\s*$/,/^formativa\.?$/i,/^sumativa\.?$/i,/^-+$/,/^fecha\s+por\s+confirmar\.?$/i,/^sin\s+evaluaci/i,/^por\s+confirmar\.?$/i];
+const EVAL_VAGUE=[/[uú]ltima\s+semana/i,/^fecha\s+por\s+confirmar/i,/^por\s+confirmar/i,/al\s+terminar\s+la\s+lecci[oó]n.*(?:fecha|por\s+confirmar)/i];
+
+function parse(text){
+  const wk=text.match(/SEMANA\s+DEL?\s+(\d+)\s+AL?\s+(\d+)\s+DE\s+(\w+)/i);
+  const weekLabel=wk?`Semana del ${wk[1]} al ${wk[2]} de ${wk[3]}`:'';
+  const startDay=wk?parseInt(wk[1]):null;const endDay=wk?parseInt(wk[2]):null;
+  const weekMonthName=wk?wk[3].toLowerCase():'';const weekMonth=MONTHS_MAP[weekMonthName]||0;
+  const cm=text.match(/(\d+°?\s*(?:BÁSICO|Básico|básico))/);const curso=cm?cm[1]:'';
+  const pages=text.split('~~PG~~').filter(p=>p.trim());
+  const week={};for(const d of DAYS) week[d]={items:[],holiday:false,holidayName:''};
+  const futureItems=[];
+
+  for(const page of pages){
+    const upper=page.toUpperCase();
+    if(upper.includes('CALENDARIO DE EVALUACIONES')) continue;
+    if(upper.includes('AGENDA')&&upper.includes('SEMANA DEL')&&!upper.includes('PROFESOR')) continue;
+    const subj=detectSubject(page);if(!subj) continue;
+    const actSection=getSection(page,'Actividades');const dayBlocks=splitByDays(actSection||'');
+
+    for(const [di,bt] of Object.entries(dayBlocks)){
+      const dn=DAYS[parseInt(di)];if(!dn) continue;const l=bt.toLowerCase();
+      if(l.includes('interferiado')){week[dn].holiday=true;week[dn].holidayName='Interferiado';}
+      else if(l.includes('feriado')){week[dn].holiday=true;week[dn].holidayName='Feriado';}
+    }
+    for(const [di,bt] of Object.entries(dayBlocks)){
+      const dn=DAYS[parseInt(di)];if(!dn) continue;
+      for(const m of extractMaterials(bt)) addU(week[dn].items,{type:'mat',subject:subj,text:m});
+      for(const e of extractEntregas(bt)) addU(week[dn].items,{type:'entrega',subject:subj,text:e});
+    }
+    for(const m of extractMaterials(page)){
+      let ok=false;for(const dn of DAYS){if(week[dn].items.some(x=>x.type==='mat'&&x.subject===subj&&norm(x.text)===norm(m))){ok=true;break;}}
+      if(ok) continue;const days=SCHEDULE[subj]||[];
+      for(const di of days){if(!week[DAYS[di]].holiday) addU(week[DAYS[di]].items,{type:'mat',subject:subj,text:m});}
+    }
+    const evalSection=getSection(page,'Evaluaciones');
+    if(evalSection){
+      let clean=evalSection.replace(/\s+/g,' ').trim();
+      if(isSkip(clean)||isVague(clean)) continue;
+      clean=cleanEval(clean);
+      const dates=extractDatesM(clean,weekMonth);
+      const inside=dates.filter(d=>startDay&&endDay&&d.month===weekMonth&&d.day>=startDay&&d.day<=endDay);
+      const outside=dates.filter(d=>{if(!startDay||!endDay) return false;return d.month>weekMonth||(d.month===weekMonth&&d.day>endDay)||(d.month===weekMonth&&d.day<startDay)||(d.month<weekMonth);});
+      if(outside.length>0&&inside.length===0){addUF(futureItems,{type:'eval',subject:subj,text:clean,dates:outside});}
+      else{
+        const evalDay=resolveDay(clean,startDay);
+        if(evalDay&&week[evalDay]) addU(week[evalDay].items,{type:'eval',subject:subj,text:clean});
+        else if(inside.length>0){const idx=inside[0].day-startDay;if(idx>=0&&idx<5) addU(week[DAYS[idx]].items,{type:'eval',subject:subj,text:clean});}
+        if(outside.length>0) addUF(futureItems,{type:'eval',subject:subj,text:clean,dates:outside});
+      }
+      for(const m of extractMaterials(evalSection)){
+        const evalDay=resolveDay(evalSection,startDay);
+        if(evalDay) addU(week[evalDay].items,{type:'mat',subject:subj,text:m});
+        else if(inside.length>0){const idx=inside[0].day-startDay;if(idx>=0&&idx<5) addU(week[DAYS[idx]].items,{type:'mat',subject:subj,text:m});}
+        else{const days=SCHEDULE[subj]||[];for(const di of days){if(!week[DAYS[di]].holiday) addU(week[DAYS[di]].items,{type:'mat',subject:subj,text:m});}}
+      }
+    }
+  }
+  for(const dn of DAYS) dedup(week[dn].items);
+  return {weekLabel,curso,startDay,endDay,weekMonth,week,futureItems};
+}
+
+function detectSubject(p){const u=p.toUpperCase();const s=[['ORIENTACIÓN','Orientación'],['TALLER DE LENGUAJE','T.Lenguaje'],['TALLER  DE  LENGUAJE','T.Lenguaje'],['TALLER DE MATEMÁTICA','T.Matemática'],['TALLER  DE  MATEMÁTICA','T.Matemática'],['LENGUAJE Y COMUNICACIÓN','Lenguaje'],['LENGUAJE  Y  COMUNICACIÓN','Lenguaje'],['LENGUAJE Y  COMUNICACIÓN','Lenguaje'],['CIENCIAS NATURALES','Ciencias'],['HISTORIA, GEOGRAFÍA','Historia'],['HISTORIA,  GEOGRAFÍA','Historia'],['EDUCACIÓN FÍSICA','Ed.Física'],['EDUCACIÓN  FÍSICA','Ed.Física'],['ARTES VISUALES','Artes'],['MATEMÁTICA','Matemática'],['TECNOLOGÍA','Tecnología'],['INGLÉS','Inglés'],['MÚSICA','Música'],['RELIGIÓN','Religión']];for(const [k,l] of s){if(u.includes(k)) return l;}return null;}
+function getSection(t,h){const i=t.search(new RegExp(h,'i'));if(i===-1) return null;const s=i+h.length;const stops=['Evaluaciones','Profesor','Unidad ','Objetivo','LENGUAJE','MATEMÁTICA','HISTORIA','CIENCIAS','INGLÉS','MÚSICA','ARTES','TECNOLOGÍA','EDUCACIÓN','ORIENTACIÓN','TALLER','RELIGIÓN'];let e=t.length;for(const x of stops){const si=t.indexOf(x,s+8);if(si>-1&&si<e) e=si;}return t.substring(s,e);}
+function splitByDays(t){const b={},l=t.toLowerCase(),pos=[];for(let i=0;i<DAYS_ALT.length;i++){for(const a of DAYS_ALT[i]){const re=new RegExp('[*]?\\s*'+a+'\\s*:','gi');let m;while((m=re.exec(l))!==null) pos.push({d:i,s:m.index+m[0].length,ms:m.index});}}pos.sort((a,b)=>a.s-b.s);for(let p=0;p<pos.length;p++){const end=p<pos.length-1?pos[p+1].ms:t.length;b[pos[p].d]=t.substring(pos[p].s,Math.max(pos[p].s,end));}return b;}
+function extractMaterials(t){const r=[];for(const m of t.matchAll(/Materiales?\s*:\s*(.+?)(?=(?:Mi[eé]rcoles|Martes|Jueves|Viernes|Lunes)\s*:|Evaluaciones|Profesor|Objetivo|Unidad|$)/gis)){const x=m[1].replace(/\s+/g,' ').trim();if(x.length>2&&!isBoring(x)) r.push(x);}for(const m of t.matchAll(/((?:TRAER|Traer)\s+.+?)(?=\.\s|(?:Mi[eé]rcoles|Martes|Jueves|Viernes|Lunes)\s*:|Evaluaciones|\n|$)/gi)){const x=m[1].replace(/\s+/g,' ').trim();if(x.length>5&&x.length<150&&!r.some(y=>norm(y)===norm(x))) r.push(x);}for(const m of t.matchAll(/Recursos?\s*:\s*(.+?)(?=(?:Mi[eé]rcoles|Martes|Jueves|Viernes|Lunes)\s*:|Evaluaciones|Profesor|$)/gis)){const x=m[1].replace(/\s+/g,' ').trim();if(isSpecial(x)&&x.length>3&&!r.some(y=>norm(y)===norm(x))) r.push(x);}return r;}
+function isBoring(t){return /^(?:texto|cuaderno|estuche|libro)(?:[\s,.]+(?:texto|cuaderno|estuche|libro))*[.\s]*$/i.test(t.trim());}
+function isSpecial(t){return /cartulina|block|plum[oó]n|pegamento|tijera|regla|carpeta|instrumento|decoraci|im[aá]gen|hoja|color/i.test(t);}
+function extractEntregas(t){const r=[];for(const p of [/(?:entrega\s+y\s+presentaci[oó]n|presentaci[oó]n\s+y\s+entrega)\s+(?:del?\s+)?(?:trabajo\s*)?[,:.]?\s*[^.]{3,100}/gi,/trabajo\s+evaluado\s*[:.]?\s*\(?[^.)]{3,80}\)?/gi]){for(const m of t.matchAll(p)){let x=m[0].replace(/\s+/g,' ').trim().replace(/\s*Recursos?\s*:\s*(?:texto|cuaderno|estuche)[\s,.]*/gi,'').trim();if(x.length>5&&!r.some(y=>norm(y)===norm(x))) r.push(x);}}return r;}
+function cleanEval(t){return t.replace(/\s*Recursos?\s*:\s*(?:texto[\s,]*)?(?:cuaderno[\s,]*)?(?:estuche[\s,]*)?\.?\s*/gi,' ').replace(/\s+/g,' ').trim();}
+function isSkip(t){for(const r of EVAL_SKIP){if(r.test(t)) return true;}if(t.length<4) return true;const n=['matemática','lenguaje','historia','ciencias','inglés','música','artes','tecnología','educación física','orientación','religión'];return n.some(s=>t.toLowerCase().trim()===s);}
+function isVague(t){for(const r of EVAL_VAGUE) if(r.test(t)) return true;return false;}
+function extractDatesM(t,dm){const d=[];for(const m of t.matchAll(/(\d{1,2})\s*(?:de\s*)?(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/gi)){d.push({day:parseInt(m[1]),month:MONTHS_MAP[m[2].toLowerCase()]||dm});}return d;}
+function resolveDay(t,s){const l=t.toLowerCase();for(let i=0;i<DAYS_ALT.length;i++){for(const a of DAYS_ALT[i]){if(l.includes(a)) return DAYS[i];}}if(s){const d=extractDatesM(t,0);for(const x of d){const idx=x.day-s;if(idx>=0&&idx<5) return DAYS[idx];}}return null;}
+function norm(t){return(t||'').replace(/[^a-záéíóúñ0-9]/gi,'').toLowerCase().substring(0,50);}
+function addU(a,i){if(!a.some(x=>x.type===i.type&&norm(x.text)===norm(i.text))) a.push(i);}
+function addUF(a,i){if(!a.some(x=>x.type===i.type&&x.subject===i.subject&&norm(x.text)===norm(i.text))) a.push(i);}
+function dedup(items){for(let i=0;i<items.length;i++){for(let j=i+1;j<items.length;j++){if(items[i].type===items[j].type&&textSim(items[i].text,items[j].text)){if(!items[i].subject.includes(items[j].subject)) items[i].subject+=' / '+items[j].subject;items.splice(j,1);j--;}}}}
+function textSim(a,b){const na=norm(a),nb=norm(b);if(na.length<8||nb.length<8) return false;const s=na.length<nb.length?na:nb;const l=na.length<nb.length?nb:na;return l.includes(s.substring(0,Math.min(35,s.length)));}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function render(data){
+  let h='';
+  h+=`<div class="wk-head"><span class="wk-icon">📅</span><span class="curso">${esc(data.curso)}</span><span class="semana">${esc(data.weekLabel)}</span></div>`;
+  const hasFuture=data.futureItems.length>0;
+  if(hasFuture) h+=`<div class="tabs"><button class="tab active" onclick="showTab('sem')">Esta semana</button><button class="tab" onclick="showTab('prox')">Próximas</button></div>`;
+
+  h+=`<div id="tab-sem"><div class="cal">`;
+  for(let di=0;di<DAYS.length;di++){
+    const dn=DAYS[di],dd=data.week[dn];
+    const dayNum=data.startDay?data.startDay+di:'';
+    const isToday=dayNum&&new Date().getDate()===dayNum;
+    const hasEval=dd.items.some(x=>x.type==='eval');
+    const hasEntrega=!hasEval&&dd.items.some(x=>x.type==='entrega');
+
+    h+=`<div class="col ${dd.holiday&&dd.items.length===0?'holiday':''} ${hasEval?'has-eval':''} ${hasEntrega?'has-entrega':''}">`;
+    h+=`<div class="col-head"><span class="dname">${dn.substring(0,3)}</span><span class="dnum ${isToday?'today':''}">${dayNum}</span></div><div class="col-body">`;
+
+    if(dd.holiday&&dd.items.length===0) h+=`<div class="holiday-label">🎉 ${dd.holidayName}</div>`;
+    else if(dd.holiday) h+=`<div style="color:var(--green);font-size:11px;font-weight:800;text-align:center;padding:2px 0 4px;">🎉 ${dd.holidayName}</div>`;
+
+    dd.items.sort((a,b)=>({eval:0,entrega:1,mat:2}[a.type]??9)-({eval:0,entrega:1,mat:2}[b.type]??9));
+    for(const item of dd.items){
+      const c={eval:['📝','Prueba'],entrega:['📌','Entrega'],mat:['🎒','Llevar']};
+      const [icon,label]=c[item.type]||['',''];
+      h+=`<div class="it ${item.type}"><div class="lbl">${icon} ${label} · ${item.subject}</div><div class="txt">${esc(item.text)}</div></div>`;
+    }
+    if(dd.items.length===0&&!dd.holiday) h+=`<div class="empty-col">✓</div>`;
+    h+=`</div></div>`;
+  }
+  h+=`</div>`;
+  h+=`<div class="legend"><div class="legend-item"><div class="legend-dot ev"></div>Pruebas</div><div class="legend-item"><div class="legend-dot en"></div>Entregas</div><div class="legend-item"><div class="legend-dot ma"></div>Materiales</div></div>`;
+  h+=`</div>`;
+
+  if(hasFuture){
+    h+=`<div id="tab-prox" class="future-section" style="display:none;">`;
+    const sorted=[...data.futureItems].sort((a,b)=>{const da=a.dates?.[0]||{day:99,month:99};const db=b.dates?.[0]||{day:99,month:99};return(da.month*100+da.day)-(db.month*100+db.day);});
+    const byMonth={};for(const item of sorted){const mk=item.dates?.[0]?.month||0;if(!byMonth[mk]) byMonth[mk]=[];byMonth[mk].push(item);}
+    for(const mk of Object.keys(byMonth).sort((a,b)=>parseInt(a)-parseInt(b))){
+      h+=`<div class="future-month">${MONTHS_NAMES[parseInt(mk)]||'Sin mes'}</div>`;
+      h+=`<div class="cal" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr));">`;
+      const byDay={};for(const item of byMonth[mk]){const dk=item.dates?.[0]?.day||'?';if(!byDay[dk]) byDay[dk]=[];byDay[dk].push(item);}
+      for(const dk of Object.keys(byDay).sort((a,b)=>parseInt(a)-parseInt(b))){
+        h+=`<div class="col"><div class="col-head"><span class="dname"></span><span class="dnum">${dk}</span></div><div class="col-body">`;
+        for(const item of byDay[dk]){const c={eval:['📝','Prueba'],entrega:['📌','Entrega'],mat:['🎒','Llevar']};const [icon,label]=c[item.type]||['',''];
+          h+=`<div class="it ${item.type}"><div class="lbl">${icon} ${label} · ${item.subject}</div><div class="txt">${esc(item.text)}</div></div>`;}
+        h+=`</div></div>`;}
+      h+=`</div>`;}
+    h+=`</div>`;}
+
+  out.innerHTML=h;out.classList.add('on');
+}
+function showTab(id){document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===(id==='sem'?0:1)));document.getElementById('tab-sem').style.display=id==='sem'?'':'none';const p=document.getElementById('tab-prox');if(p){p.style.display=id==='prox'?'':'none';if(id==='prox')p.classList.add('on');}}
+</script>
+</body>
+</html>
