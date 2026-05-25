@@ -16,6 +16,7 @@
     --pink:#FF6B8A;--pink-light:#FFF0F3;--pink-dark:#C9405A;
     --purple:#A855F7;--purple-light:#F5EEFF;--purple-dark:#7E33CC;
     --gold:#FFBA49;--gold-light:#FFF7E8;--gold-dark:#9A6800;
+    --orange:#FF8C42;--orange-light:#FFF3E8;--orange-dark:#B85A10;
     --green:#34D399;--green-light:#ECFDF5;
     --radius:16px;
   }
@@ -23,14 +24,12 @@
   body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);background-attachment:fixed;color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
   .wrap{max-width:920px;margin:0 auto;padding:16px 14px 60px;}
 
-  /* HEADER */
   .header{text-align:center;padding:30px 0 22px;position:relative;}
   .header-emoji{font-size:36px;margin-bottom:6px;}
   .header h1{font-size:24px;font-weight:900;letter-spacing:-.3px;color:var(--text);}
   .header h1 span{background:linear-gradient(135deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
   .header p{font-size:12px;color:var(--muted);margin-top:4px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
 
-  /* UPLOAD */
   .upload{border:2.5px dashed #E8C0D0;border-radius:20px;padding:36px 20px;text-align:center;cursor:pointer;background:var(--surface);transition:all .25s;margin-bottom:16px;backdrop-filter:blur(10px);}
   .upload:hover,.upload.over{border-color:var(--pink);background:var(--pink-light);transform:scale(1.01);}
   .upload-icon{font-size:40px;margin-bottom:8px;}
@@ -39,13 +38,11 @@
   .upload .btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,107,138,.4);}
   #finput{display:none;}
 
-  /* RESET BAR */
   .rbar{display:none;background:var(--surface);backdrop-filter:blur(10px);border-radius:12px;padding:10px 16px;margin-bottom:14px;justify-content:space-between;align-items:center;border:1px solid rgba(228,180,200,.3);}
   .rbar.on{display:flex;}
   .rbar .fn{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);}
   .rbar button{background:none;border:none;cursor:pointer;font-size:13px;color:var(--pink);font-weight:800;}
 
-  /* LOADING */
   .loading{display:none;text-align:center;padding:50px;}
   .loading.on{display:block;}
   .spin{width:36px;height:36px;border:3.5px solid #F0D0DD;border-top-color:var(--pink);border-radius:50%;animation:sp .7s linear infinite;margin:0 auto 12px;}
@@ -55,19 +52,16 @@
   #out{display:none;}
   #out.on{display:block;}
 
-  /* WEEK HEADER */
   .wk-head{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
   .wk-icon{font-size:28px;}
   .wk-head .curso{font-size:18px;font-weight:900;color:var(--text);}
   .wk-head .semana{font-size:13px;font-weight:700;color:var(--muted);}
 
-  /* TABS */
   .tabs{display:flex;gap:4px;margin-bottom:18px;background:var(--surface);border-radius:14px;padding:4px;width:fit-content;border:1px solid rgba(228,180,200,.2);backdrop-filter:blur(10px);}
   .tab{padding:8px 20px;border-radius:11px;font-size:13px;font-weight:800;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .2s;}
   .tab.active{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;box-shadow:0 3px 10px rgba(255,107,138,.3);}
   .tab:hover:not(.active){background:var(--pink-light);}
 
-  /* CALENDAR */
   .cal{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
   @media(max-width:640px){.cal{grid-template-columns:1fr;}}
 
@@ -75,6 +69,7 @@
   .col:hover{transform:translateY(-2px);}
   .col.holiday{opacity:.55;}
   .col.has-eval{border:1.5px solid var(--pink);box-shadow:0 3px 15px rgba(255,107,138,.12);}
+  .col.has-acteval{border:1.5px solid var(--orange);box-shadow:0 3px 15px rgba(255,140,66,.12);}
   .col.has-entrega{border:1.5px solid var(--purple);box-shadow:0 3px 15px rgba(168,85,247,.1);}
 
   .col-head{padding:10px 12px 8px;display:flex;justify-content:space-between;align-items:center;}
@@ -83,37 +78,34 @@
   .col-head .dnum.today{color:#fff;background:linear-gradient(135deg,var(--pink),var(--purple));width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 10px rgba(255,107,138,.35);}
   .col-body{padding:6px 10px 12px;flex:1;display:flex;flex-direction:column;gap:7px;}
 
-  /* ITEMS */
   .it{border-radius:10px;padding:9px 11px;font-size:12px;line-height:1.5;transition:transform .1s;}
   .it:hover{transform:scale(1.02);}
-
   .it.eval{background:var(--pink);color:#fff;}
   .it.eval .lbl{color:rgba(255,255,255,.8);}
   .it.eval .txt{color:#fff;font-weight:700;}
-
+  .it.acteval{background:var(--orange);color:#fff;}
+  .it.acteval .lbl{color:rgba(255,255,255,.85);}
+  .it.acteval .txt{color:#fff;font-weight:700;}
   .it.entrega{background:var(--purple);color:#fff;}
   .it.entrega .lbl{color:rgba(255,255,255,.8);}
   .it.entrega .txt{color:#fff;font-weight:700;}
-
   .it.mat{background:var(--gold);color:var(--gold-dark);}
   .it.mat .lbl{color:rgba(154,104,0,.7);}
   .it.mat .txt{color:var(--gold-dark);font-weight:700;}
-
   .lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1px;}
   .it .txt{font-weight:700;}
 
   .holiday-label{color:var(--green);font-weight:800;font-size:14px;text-align:center;padding:20px 8px;flex:1;display:flex;align-items:center;justify-content:center;gap:4px;}
   .empty-col{color:#E8D0DD;font-size:20px;text-align:center;padding:16px 8px;flex:1;display:flex;align-items:center;justify-content:center;}
 
-  /* LEGEND */
   .legend{display:flex;gap:16px;margin-top:18px;justify-content:center;flex-wrap:wrap;}
   .legend-item{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--muted);}
   .legend-dot{width:12px;height:12px;border-radius:4px;}
   .legend-dot.ev{background:var(--pink);}
+  .legend-dot.ae{background:var(--orange);}
   .legend-dot.en{background:var(--purple);}
   .legend-dot.ma{background:var(--gold);}
 
-  /* FUTURE */
   .future-section{display:none;margin-top:4px;}
   .future-section.on{display:block;}
   .future-month{font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;color:var(--pink);margin:16px 0 10px 4px;}
@@ -123,8 +115,8 @@
     .upload,.rbar,.header,.tabs,.legend{display:none!important;}
     body{background:#fff!important;}
     .col{backdrop-filter:none;background:#fff;border:1px solid #ddd;}
-    .it.eval,.it.entrega{color:#333!important;}
-    .it.eval .lbl,.it.entrega .lbl,.it.eval .txt,.it.entrega .txt{color:#333!important;}
+    .it.eval,.it.entrega,.it.acteval{color:#333!important;}
+    .it.eval .lbl,.it.entrega .lbl,.it.eval .txt,.it.entrega .txt,.it.acteval .lbl,.it.acteval .txt{color:#333!important;}
   }
 </style>
 </head>
@@ -178,38 +170,57 @@ const MONTHS_NAMES=['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio',
 const EVAL_SKIP=[/^\s*$/,/^formativa\.?$/i,/^sumativa\.?$/i,/^-+$/,/^fecha\s+por\s+confirmar\.?$/i,/^sin\s+evaluaci/i,/^por\s+confirmar\.?$/i];
 const EVAL_VAGUE=[/[uú]ltima\s+semana/i,/^fecha\s+por\s+confirmar/i,/^por\s+confirmar/i,/al\s+terminar\s+la\s+lecci[oó]n.*(?:fecha|por\s+confirmar)/i];
 
+const EVAL_KW=/\b(?:evaluaci[oó]n|prueba|control|certamen|test|examen)\b/i;
+const ACTEVAL_KW=/\(?\s*evaluad[ao]\s*\)?/i;
+
 function parse(text){
   const wk=text.match(/SEMANA\s+DEL?\s+(\d+)\s+AL?\s+(\d+)\s+DE\s+(\w+)/i);
   const weekLabel=wk?`Semana del ${wk[1]} al ${wk[2]} de ${wk[3]}`:'';
   const startDay=wk?parseInt(wk[1]):null;const endDay=wk?parseInt(wk[2]):null;
   const weekMonthName=wk?wk[3].toLowerCase():'';const weekMonth=MONTHS_MAP[weekMonthName]||0;
-  const cm=text.match(/(\d+°?\s*(?:BÁSICO|Básico|básico))/);const curso=cm?cm[1]:'';
+  const cm=text.match(/(\d+°?\s*(?:BÁSICO|Básico|básico|MEDIO|Medio|medio))/);const curso=cm?cm[1]:'';
   const pages=text.split('~~PG~~').filter(p=>p.trim());
   const week={};for(const d of DAYS) week[d]={items:[],holiday:false,holidayName:''};
   const futureItems=[];
 
   for(const page of pages){
     const upper=page.toUpperCase();
-    if(upper.includes('CALENDARIO DE EVALUACIONES')) continue;
+
+    // FIX 1: Parsear página de calendario en vez de saltarla
+    if(upper.includes('CALENDARIO DE EVALUACIONES')||isCalPage(page,startDay)){
+      parseCalPage(page,week,futureItems,startDay,endDay,weekMonth);
+      continue;
+    }
     if(upper.includes('AGENDA')&&upper.includes('SEMANA DEL')&&!upper.includes('PROFESOR')) continue;
+
     const subj=detectSubject(page);if(!subj) continue;
     const actSection=getSection(page,'Actividades');const dayBlocks=splitByDays(actSection||'');
 
+    // Holidays
     for(const [di,bt] of Object.entries(dayBlocks)){
       const dn=DAYS[parseInt(di)];if(!dn) continue;const l=bt.toLowerCase();
       if(l.includes('interferiado')){week[dn].holiday=true;week[dn].holidayName='Interferiado';}
       else if(l.includes('feriado')){week[dn].holiday=true;week[dn].holidayName='Feriado';}
     }
+
+    // Materials, entregas Y EVALUACIONES from day blocks
     for(const [di,bt] of Object.entries(dayBlocks)){
       const dn=DAYS[parseInt(di)];if(!dn) continue;
       for(const m of extractMaterials(bt)) addU(week[dn].items,{type:'mat',subject:subj,text:m});
       for(const e of extractEntregas(bt)) addU(week[dn].items,{type:'entrega',subject:subj,text:e});
+
+      // FIX 2: Buscar evaluaciones DENTRO del texto de actividades
+      extractEvalsFromBlock(bt,dn,subj,week);
     }
+
+    // Global materials
     for(const m of extractMaterials(page)){
       let ok=false;for(const dn of DAYS){if(week[dn].items.some(x=>x.type==='mat'&&x.subject===subj&&norm(x.text)===norm(m))){ok=true;break;}}
       if(ok) continue;const days=SCHEDULE[subj]||[];
       for(const di of days){if(!week[DAYS[di]].holiday) addU(week[DAYS[di]].items,{type:'mat',subject:subj,text:m});}
     }
+
+    // Sección Evaluaciones explícita
     const evalSection=getSection(page,'Evaluaciones');
     if(evalSection){
       let clean=evalSection.replace(/\s+/g,' ').trim();
@@ -222,8 +233,8 @@ function parse(text){
       if(outside.length>0&&inside.length===0){addUF(futureItems,{type:itemType,subject:subj,text:clean,dates:outside});}
       else{
         const evalDay=resolveDay(clean,startDay);
-        if(evalDay&&week[evalDay]) addU(week[evalDay].items,{type:itemType,subject:subj,text:clean});
-        else if(inside.length>0){const idx=inside[0].day-startDay;if(idx>=0&&idx<5) addU(week[DAYS[idx]].items,{type:itemType,subject:subj,text:clean});}
+        if(evalDay&&week[evalDay]) addEval(week[evalDay].items,subj,{type:itemType,subject:subj,text:clean});
+        else if(inside.length>0){const idx=inside[0].day-startDay;if(idx>=0&&idx<5) addEval(week[DAYS[idx]].items,subj,{type:itemType,subject:subj,text:clean});}
         if(outside.length>0) addUF(futureItems,{type:itemType,subject:subj,text:clean,dates:outside});
       }
       for(const m of extractMaterials(evalSection)){
@@ -233,10 +244,126 @@ function parse(text){
         else{const days=SCHEDULE[subj]||[];for(const di of days){if(!week[DAYS[di]].holiday) addU(week[DAYS[di]].items,{type:'mat',subject:subj,text:m});}}
       }
     }
+
+    // FIX 3: Scan completo de la página buscando evals con fecha explícita
+    scanPageEvals(page,subj,week,futureItems,startDay,endDay,weekMonth);
   }
   for(const dn of DAYS) dedup(week[dn].items);
   return {weekLabel,curso,startDay,endDay,weekMonth,week,futureItems};
 }
+
+// ====== NUEVAS FUNCIONES DE DETECCIÓN ======
+
+function isCalPage(page,startDay){
+  const upper=page.toUpperCase();
+  const nums=(page.match(/\b\d{1,2}\b/g)||[]).length;
+  const evals=(upper.match(/PRUEBA|EVALUACI[OÓ]N|CONTROL|DÍA DEL/g)||[]).length;
+  const hasHeader=/EVALUACI[OÓ]N\s+(?:INGL[EÉ]S|MATEM|LENGUAJE|CIENCIAS|HISTORIA)/i.test(page);
+  return (nums>10&&evals>=2)||hasHeader;
+}
+
+function parseCalPage(page,week,futureItems,startDay,endDay,weekMonth){
+  // Patrones: número + nombre/tipo de evaluación
+  const pats=[
+    /(\d{1,2})\s+(Prueba\s+de\s+(?:Matem[aá]ticas?|Ingl[eé]s|Lenguaje|Ciencias(?:\s+Naturales)?|Historia|M[uú]sica|Artes|Filosof[ií]a|Biolog[ií]a|Qu[ií]mica|F[ií]sica))/gi,
+    /(\d{1,2})\s+(Evaluaci[oó]n\s+(?:de\s+)?(?:Matem[aá]ticas?|Ingl[eé]s|Lenguaje|Ciencias|Historia|M[uú]sica|Artes))/gi,
+    /(\d{1,2})\s+(Control\s+de\s+(?:Matem[aá]ticas?|Ingl[eé]s|Lenguaje|Ciencias|Historia))/gi,
+    /(\d{1,2})\s+((?:CIENCIAS|HISTORIA|MATEMÁTICA|LENGUAJE|INGLÉS|MÚSICA|ARTES))\b/g,
+  ];
+  for(const pat of pats){
+    let m;while((m=pat.exec(page))!==null){
+      const dn=parseInt(m[1]),et=m[2].trim(),subj=subjFromEval(et);
+      if(startDay&&endDay&&dn>=startDay&&dn<=endDay){
+        const idx=dn-startDay;if(idx>=0&&idx<5) addEval(week[DAYS[idx]].items,subj,{type:'eval',subject:subj,text:et});
+      }else if(startDay&&dn>endDay){
+        addUF(futureItems,{type:'eval',subject:subj,text:et,dates:[{day:dn,month:weekMonth}]});
+      }
+    }
+  }
+  // Header tipo "Evaluacion Inglés" seguido de fechas
+  const hp=/Evaluaci[oó]n\s+(Ingl[eé]s|Matem[aá]ticas?|Lenguaje|Ciencias|Historia|M[uú]sica)/gi;
+  let hm;while((hm=hp.exec(page))!==null){
+    const subj=subjFromEval(hm[1]);
+    const after=page.substring(hm.index+hm[0].length,hm.index+hm[0].length+100);
+    const nm=after.match(/(\d{1,2})/);
+    if(nm){const dn=parseInt(nm[1]);
+      if(startDay&&endDay&&dn>=startDay&&dn<=endDay){const idx=dn-startDay;if(idx>=0&&idx<5) addEval(week[DAYS[idx]].items,subj,{type:'eval',subject:subj,text:`Evaluación ${subj}`});}
+    }
+  }
+  // Entregas en calendario
+  const ep=[/(\d{1,2})\s+(\w+)\s*\(?\s*(?:[Ee]ntrega|[Pp]resentaci[oó]n)[^)\d]{0,60}/g];
+  for(const pat of ep){let m;while((m=pat.exec(page))!==null){
+    const dn=parseInt(m[1]),ft=m[0].replace(/^\d+\s*/,'').trim(),subj=subjFromEval(ft);
+    if(startDay&&endDay&&dn>=startDay&&dn<=endDay){const idx=dn-startDay;if(idx>=0&&idx<5) addU(week[DAYS[idx]].items,{type:'entrega',subject:subj,text:ft});}
+  }}
+}
+
+function subjFromEval(t){
+  const u=t.toUpperCase();
+  const m={'MATEMÁTICA':'Matemática','MATEMÁTICAS':'Matemática','MATEMATICA':'Matemática','MATEMATICAS':'Matemática',
+    'LENGUAJE':'Lenguaje','INGLÉS':'Inglés','INGLES':'Inglés','HISTORIA':'Historia',
+    'CIENCIAS':'Ciencias','CIENCIAS NATURALES':'Ciencias','MÚSICA':'Música','MUSICA':'Música',
+    'ARTES':'Artes','FILOSOFÍA':'Filosofía','BIOLOGÍA':'Biología','QUÍMICA':'Química','FÍSICA':'Física'};
+  for(const [k,v] of Object.entries(m)){if(u.includes(k)) return v;}
+  return t.replace(/^(Prueba|Evaluación|Control)\s+(de\s+)?/i,'').trim();
+}
+
+function extractEvalsFromBlock(blockText,dayName,subject,week){
+  const lower=blockText.toLowerCase();
+  let foundEval=false;
+
+  // "Evaluación" / "Prueba" / "Control" como keyword directo
+  if(EVAL_KW.test(lower)&&!/sin\s+evaluaci|no\s+hay\s+evaluaci/i.test(lower)){
+    const em=lower.match(/(evaluaci[oó]n|prueba|control|certamen|test|examen)([^.]{0,80})/i);
+    let et=em?cap(em[0].replace(/\s+/g,' ').trim()):'Evaluación';
+    if(et.length<4) et='Evaluación';
+    addEval(week[dayName].items,subject,{type:'eval',subject:subject,text:et});
+    foundEval=true;
+  }
+
+  // "(evaluada)" o "actividad evaluada" — pero NO "trabajo evaluado" (eso es entrega)
+  if(ACTEVAL_KW.test(lower)&&!/trabajo\s+evaluad/i.test(lower)&&!foundEval){
+    const am=blockText.match(/(.{0,60}(?:\(?\s*evaluad[ao]\s*\)?).{0,40})/i);
+    let at=am?am[1].replace(/\s+/g,' ').trim():'Actividad evaluada';
+    if(at.length>120) at=at.substring(0,120)+'...';
+    addEval(week[dayName].items,subject,{type:'acteval',subject:subject,text:cap(at)});
+  }
+
+  // "Presentación Día del Libro" u otras presentaciones evaluativas
+  if(/presentaci[oó]n\s+(?:d[ií]a\s+del\s+libro|oral|grupal|del?\s+proyecto)/i.test(lower)){
+    const pm=blockText.match(/presentaci[oó]n[^.]{0,80}/i);
+    if(pm) addU(week[dayName].items,{type:'entrega',subject:subject,text:cap(pm[0].trim())});
+  }
+}
+
+function scanPageEvals(page,subj,week,futureItems,startDay,endDay,weekMonth){
+  const lower=page.toLowerCase();
+  // "Prueba/Evaluación el día X de mes"
+  const pats=[
+    /(prueba|evaluaci[oó]n|control)\s+(?:el\s+)?(?:d[ií]a\s+)?(\d{1,2})\s+(?:de\s+)?(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/gi,
+    /(prueba|evaluaci[oó]n|control)\s+(?:el\s+)?(lunes|martes|mi[eé]rcoles|jueves|viernes)\s+(\d{1,2})\s+(?:de\s+)?(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/gi,
+  ];
+  for(const pat of pats){let m;while((m=pat.exec(lower))!==null){
+    const ft=cap(m[0].trim()),nm=m[0].match(/(\d{1,2})/);
+    if(nm){const dn=parseInt(nm[1]);
+      if(startDay&&endDay&&dn>=startDay&&dn<=endDay){const idx=dn-startDay;if(idx>=0&&idx<5) addEval(week[DAYS[idx]].items,subj,{type:'eval',subject:subj,text:ft});}
+      else if(startDay&&dn>endDay) addUF(futureItems,{type:'eval',subject:subj,text:ft,dates:[{day:dn,month:weekMonth}]});
+    }
+  }}
+  // Día del Libro u otros eventos especiales con fecha
+  const dlm=lower.match(/(?:presentaci[oó]n\s+)?d[ií]a\s+del\s+libro[^.]{0,60}/i);
+  if(dlm){
+    const dm2=dlm[0].match(/(\d{1,2})\s+(?:de\s+)?(mayo|junio|julio|agosto)/i);
+    const di2=findDayInText(dlm[0]);
+    if(di2&&week[di2]) addU(week[di2].items,{type:'entrega',subject:subj,text:cap(dlm[0].trim())});
+    else if(dm2){const dn=parseInt(dm2[1]);if(startDay&&endDay&&dn>=startDay&&dn<=endDay){const idx=dn-startDay;if(idx>=0&&idx<5) addU(week[DAYS[idx]].items,{type:'entrega',subject:subj,text:cap(dlm[0].trim())});}}
+  }
+}
+
+function findDayInText(t){const l=t.toLowerCase();for(let i=0;i<DAYS_ALT.length;i++){for(const a of DAYS_ALT[i]){if(l.includes(a)) return DAYS[i];}}return null;}
+function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
+
+// ====== FUNCIONES ORIGINALES (sin cambios) ======
 
 function detectSubject(p){const u=p.toUpperCase();const s=[['ORIENTACIÓN','Orientación'],['TALLER DE LENGUAJE','T.Lenguaje'],['TALLER  DE  LENGUAJE','T.Lenguaje'],['TALLER DE MATEMÁTICA','T.Matemática'],['TALLER  DE  MATEMÁTICA','T.Matemática'],['LENGUAJE Y COMUNICACIÓN','Lenguaje'],['LENGUAJE  Y  COMUNICACIÓN','Lenguaje'],['LENGUAJE Y  COMUNICACIÓN','Lenguaje'],['CIENCIAS NATURALES','Ciencias'],['HISTORIA, GEOGRAFÍA','Historia'],['HISTORIA,  GEOGRAFÍA','Historia'],['EDUCACIÓN FÍSICA','Ed.Física'],['EDUCACIÓN  FÍSICA','Ed.Física'],['ARTES VISUALES','Artes'],['MATEMÁTICA','Matemática'],['TECNOLOGÍA','Tecnología'],['INGLÉS','Inglés'],['MÚSICA','Música'],['RELIGIÓN','Religión']];for(const [k,l] of s){if(u.includes(k)) return l;}return null;}
 function getSection(t,h){const i=t.search(new RegExp(h,'i'));if(i===-1) return null;const s=i+h.length;const stops=['Evaluaciones','Profesor','Unidad ','Objetivo','LENGUAJE','MATEMÁTICA','HISTORIA','CIENCIAS','INGLÉS','MÚSICA','ARTES','TECNOLOGÍA','EDUCACIÓN','ORIENTACIÓN','TALLER','RELIGIÓN'];let e=t.length;for(const x of stops){const si=t.indexOf(x,s+8);if(si>-1&&si<e) e=si;}return t.substring(s,e);}
@@ -250,18 +377,65 @@ function isSkip(t){for(const r of EVAL_SKIP){if(r.test(t)) return true;}if(t.len
 function isVague(t){for(const r of EVAL_VAGUE) if(r.test(t)) return true;return false;}
 function extractDatesM(t,dm){const d=[];for(const m of t.matchAll(/(\d{1,2})\s*(?:de\s*)?(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/gi)){d.push({day:parseInt(m[1]),month:MONTHS_MAP[m[2].toLowerCase()]||dm});}for(const m of t.matchAll(/(\d{1,2})\/(\d{1,2})/g)){d.push({day:parseInt(m[1]),month:parseInt(m[2])});}return d;}
 function resolveDay(t,s){const l=t.toLowerCase();for(let i=0;i<DAYS_ALT.length;i++){for(const a of DAYS_ALT[i]){if(l.includes(a)) return DAYS[i];}}if(s){const d=extractDatesM(t,0);for(const x of d){const idx=x.day-s;if(idx>=0&&idx<5) return DAYS[idx];}}return null;}
-function isEntregaText(t){return /entrega\b/i.test(t)&&!/prueba|evaluaci[oó]n|control|test|examen|certamen|sumativa/i.test(t);}
+function isEntregaText(t){return (/entrega\b/i.test(t)||/presentaci[oó]n/i.test(t))&&!/prueba|control|test|examen|certamen|sumativa/i.test(t);}
 function norm(t){return(t||'').replace(/[^a-záéíóúñ0-9]/gi,'').toLowerCase().substring(0,50);}
 function addU(a,i){if(!a.some(x=>x.type===i.type&&norm(x.text)===norm(i.text))) a.push(i);}
+
+// Smart eval dedup: si ya existe una eval/acteval del mismo subject, queda la más descriptiva
+function addEval(a,subj,item){
+  const evalTypes=['eval','acteval'];
+  const existing=a.findIndex(x=>evalTypes.includes(x.type)&&x.subject===subj);
+  if(existing===-1){a.push(item);return;}
+  // Ya hay una entrada del mismo subject — quedarse con la más descriptiva
+  const old=a[existing];
+  const oldLen=norm(old.text).length;
+  const newLen=norm(item.text).length;
+  // Preferir 'eval' sobre 'acteval', y texto más largo (más descriptivo)
+  // Pero no si el texto largo es solo el bloque completo de actividades
+  if(item.type==='eval'&&old.type==='acteval'){a[existing]=item;}
+  else if(newLen>oldLen&&newLen<100){a[existing].text=item.text;a[existing].type=item.type;}
+}
 function addUF(a,i){if(!a.some(x=>x.type===i.type&&x.subject===i.subject&&norm(x.text)===norm(i.text))) a.push(i);}
-function dedup(items){for(let i=0;i<items.length;i++){for(let j=i+1;j<items.length;j++){if(items[i].type===items[j].type&&textSim(items[i].text,items[j].text)){if(!items[i].subject.includes(items[j].subject)) items[i].subject+=' / '+items[j].subject;items.splice(j,1);j--;}}}}
+function dedup(items){
+  // Phase 1: Merge eval-like items for same subject (keep most descriptive)
+  const evalTypes=['eval','acteval'];
+  const subjMap={};
+  for(let i=0;i<items.length;i++){
+    if(!evalTypes.includes(items[i].type)) continue;
+    const key=items[i].subject;
+    if(!subjMap[key]) subjMap[key]=[];
+    subjMap[key].push(i);
+  }
+  const toRemove=new Set();
+  for(const indices of Object.values(subjMap)){
+    if(indices.length<=1) continue;
+    // Find the best entry: prefer 'eval' over 'acteval', longer descriptive text
+    let bestIdx=indices[0];
+    for(let k=1;k<indices.length;k++){
+      const curr=items[indices[k]],best=items[bestIdx];
+      const currN=norm(curr.text),bestN=norm(best.text);
+      // If current is 'eval' and best is 'acteval', prefer eval
+      if(curr.type==='eval'&&best.type==='acteval'){bestIdx=indices[k];continue;}
+      if(best.type==='eval'&&curr.type==='acteval') continue;
+      // Otherwise prefer longer text (more descriptive) up to a point
+      if(currN.length>bestN.length&&currN.length<80) bestIdx=indices[k];
+    }
+    for(const idx of indices){if(idx!==bestIdx) toRemove.add(idx);}
+  }
+  // Remove from end to start to keep indices valid
+  for(const idx of [...toRemove].sort((a,b)=>b-a)) items.splice(idx,1);
+
+  // Phase 2: Original text similarity dedup
+  for(let i=0;i<items.length;i++){for(let j=i+1;j<items.length;j++){if(items[i].type===items[j].type&&textSim(items[i].text,items[j].text)){if(!items[i].subject.includes(items[j].subject)) items[i].subject+=' / '+items[j].subject;items.splice(j,1);j--;}}}
+}
 function textSim(a,b){const na=norm(a),nb=norm(b);if(na.length<8||nb.length<8) return false;const s=na.length<nb.length?na:nb;const l=na.length<nb.length?nb:na;return l.includes(s.substring(0,Math.min(35,s.length)));}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-function getDayName(day,month,data){
+function getDayName(day,month){
   if(!day||!month) return '';
-  try{const dt=new Date(2025,month-1,day);const names=['Dom','Lunes','Martes','Miérc.','Jueves','Viernes','Sáb'];return names[dt.getDay()]||'';}catch(e){return '';}
+  try{const dt=new Date(2026,month-1,day);const names=['Dom','Lunes','Martes','Miérc.','Jueves','Viernes','Sáb'];return names[dt.getDay()]||'';}catch(e){return '';}
 }
+
 function render(data){
   let h='';
   h+=`<div class="wk-head"><span class="wk-icon">📅</span><span class="curso">${esc(data.curso)}</span><span class="semana">${esc(data.weekLabel)}</span></div>`;
@@ -274,17 +448,18 @@ function render(data){
     const dayNum=data.startDay?data.startDay+di:'';
     const isToday=dayNum&&new Date().getDate()===dayNum;
     const hasEval=dd.items.some(x=>x.type==='eval');
-    const hasEntrega=!hasEval&&dd.items.some(x=>x.type==='entrega');
+    const hasActEval=!hasEval&&dd.items.some(x=>x.type==='acteval');
+    const hasEntrega=!hasEval&&!hasActEval&&dd.items.some(x=>x.type==='entrega');
 
-    h+=`<div class="col ${dd.holiday&&dd.items.length===0?'holiday':''} ${hasEval?'has-eval':''} ${hasEntrega?'has-entrega':''}">`;
+    h+=`<div class="col ${dd.holiday&&dd.items.length===0?'holiday':''} ${hasEval?'has-eval':''} ${hasActEval?'has-acteval':''} ${hasEntrega?'has-entrega':''}">`;
     h+=`<div class="col-head"><span class="dname">${dn}</span><span class="dnum ${isToday?'today':''}">${dayNum}</span></div><div class="col-body">`;
 
     if(dd.holiday&&dd.items.length===0) h+=`<div class="holiday-label">🎉 ${dd.holidayName}</div>`;
     else if(dd.holiday) h+=`<div style="color:var(--green);font-size:11px;font-weight:800;text-align:center;padding:2px 0 4px;">🎉 ${dd.holidayName}</div>`;
 
-    dd.items.sort((a,b)=>({eval:0,entrega:1,mat:2}[a.type]??9)-({eval:0,entrega:1,mat:2}[b.type]??9));
+    dd.items.sort((a,b)=>({eval:0,acteval:1,entrega:2,mat:3}[a.type]??9)-({eval:0,acteval:1,entrega:2,mat:3}[b.type]??9));
     for(const item of dd.items){
-      const c={eval:['📝','Prueba'],entrega:['📌','Entrega'],mat:['🎒','Llevar']};
+      const c={eval:['📝','Prueba'],acteval:['🟠','Act. Evaluada'],entrega:['📌','Entrega'],mat:['🎒','Llevar']};
       const [icon,label]=c[item.type]||['',''];
       h+=`<div class="it ${item.type}"><div class="lbl">${icon} ${label} · ${item.subject}</div><div class="txt">${esc(item.text)}</div></div>`;
     }
@@ -292,7 +467,7 @@ function render(data){
     h+=`</div></div>`;
   }
   h+=`</div>`;
-  h+=`<div class="legend"><div class="legend-item"><div class="legend-dot ev"></div>Pruebas</div><div class="legend-item"><div class="legend-dot en"></div>Entregas</div><div class="legend-item"><div class="legend-dot ma"></div>Materiales</div></div>`;
+  h+=`<div class="legend"><div class="legend-item"><div class="legend-dot ev"></div>Pruebas</div><div class="legend-item"><div class="legend-dot ae"></div>Act. Evaluada</div><div class="legend-item"><div class="legend-dot en"></div>Entregas</div><div class="legend-item"><div class="legend-dot ma"></div>Materiales</div></div>`;
   h+=`</div>`;
 
   if(hasFuture){
@@ -304,9 +479,9 @@ function render(data){
       h+=`<div class="cal" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr));">`;
       const byDay={};for(const item of byMonth[mk]){const dk=item.dates?.[0]?.day||'?';if(!byDay[dk]) byDay[dk]=[];byDay[dk].push(item);}
       for(const dk of Object.keys(byDay).sort((a,b)=>parseInt(a)-parseInt(b))){
-        const fDayName=getDayName(parseInt(dk),parseInt(mk),data);
+        const fDayName=getDayName(parseInt(dk),parseInt(mk));
         h+=`<div class="col"><div class="col-head"><span class="dname">${fDayName}</span><span class="dnum">${dk}</span></div><div class="col-body">`;
-        for(const item of byDay[dk]){const c={eval:['📝','Prueba'],entrega:['📌','Entrega'],mat:['🎒','Llevar']};const [icon,label]=c[item.type]||['',''];
+        for(const item of byDay[dk]){const c={eval:['📝','Prueba'],acteval:['🟠','Act. Evaluada'],entrega:['📌','Entrega'],mat:['🎒','Llevar']};const [icon,label]=c[item.type]||['',''];
           h+=`<div class="it ${item.type}"><div class="lbl">${icon} ${label} · ${item.subject}</div><div class="txt">${esc(item.text)}</div></div>`;}
         h+=`</div></div>`;}
       h+=`</div>`;}
